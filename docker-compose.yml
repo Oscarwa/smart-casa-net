@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: ./smart-casa-api
+      context: ./api
       dockerfile: Dockerfile
     ports:
       - "5005:8080"
@@ -10,7 +10,7 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./smart-casa-api:/app
+      - ./api:/app
       - /app/bin
       - /app/obj
     healthcheck:
@@ -27,14 +27,14 @@ services:
 
   frontend:
     build:
-      context: ./smart-casa-ui
+      context: ./ui
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
     depends_on:
       - backend
     volumes:
-      - ./smart-casa-ui:/app
+      - ./ui:/app
       - /app/node_modules
     environment:
       - VITE_DEV_SERVER=true 
@@ -43,7 +43,7 @@ services:
 
   db:
     image: postgres:latest
-    container_name: smart-casa-db
+    container_name: db
     restart: always
     environment:
       POSTGRES_USER: postgres
