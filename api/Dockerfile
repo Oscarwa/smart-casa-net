@@ -4,6 +4,7 @@ WORKDIR /app
 
 # Copy everything and restore dependencies
 COPY . ./
+WORKDIR /app/SmartCasa.API
 RUN dotnet restore
 
 # Expose ports for the API and debugging

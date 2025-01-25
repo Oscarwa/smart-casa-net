@@ -1,6 +1,6 @@
-/smart-casa-api/bin
-/smart-casa-api/obj
+/api/SmartCasa.*/bin
+/api/SmartCasa.*/obj
 
-/smart-casa-ui/node_modules
+/ui/node_modules
 
 .env

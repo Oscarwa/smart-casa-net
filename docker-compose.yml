@@ -1,5 +1,6 @@
 services:
   backend:
+    container_name: api
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -11,8 +12,8 @@ services:
         condition: service_healthy
     volumes:
       - ./api:/app
-      - /app/bin
-      - /app/obj
+      - /app/SmartCasa.API/bin
+      - /app/SmartCasa.API/obj
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5005/health"]
       interval: 30s
@@ -26,6 +27,7 @@ services:
       - smart_casa_network
 
   frontend:
+    container_name: ui
     build:
       context: ./ui
       dockerfile: Dockerfile
