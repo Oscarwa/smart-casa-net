@@ -1,5 +1,8 @@
 /api/SmartCasa.*/bin
 /api/SmartCasa.*/obj
+/api/.vs
+
+.vscode
 
 /ui/node_modules
 
