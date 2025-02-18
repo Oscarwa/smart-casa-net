@@ -6,13 +6,18 @@ namespace SmartCasa.Model;
 
 public static class DependencyInjection
 {
-    public static void RegisterModel(this IServiceCollection services, IConfiguration Configuration)
+    public static void RegisterModels(this IServiceCollection services, IConfiguration Configuration)
     {
-        services.AddDbContext<AspNetCoreNTierDbContext>(options =>
+        var connString = Configuration.GetConnectionString("DefaultConnection");
+
+        services.AddDbContext<CoreContext>(options =>
         {
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+            options.UseNpgsql(
+                Configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("SmartCasa.API")
+            );
         });
 
-        services.AddScoped<IUserRepository, UserRepository>();
+        //services.AddScoped<IUserRepository, UserRepository>();
     }
 }
