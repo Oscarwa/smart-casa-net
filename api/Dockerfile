@@ -2,6 +2,10 @@
 FROM --platform=linux/arm64 mcr.microsoft.com/dotnet/sdk:9.0 AS dev
 WORKDIR /app
 
+# Install EF Core CLI globally
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 # Copy everything and restore dependencies
 COPY . ./
 WORKDIR /app/SmartCasa.API
