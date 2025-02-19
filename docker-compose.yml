@@ -1,0 +1,72 @@
+services:
+  backend:
+    container_name: e-api
+    platform: linux/arm64
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "5001:5001"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./api:/app
+      - /app/Eventapp.API/bin
+      - /app/Eventapp.API/obj
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:5005/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+    networks:
+      - event_app_network
+
+  frontend:
+    container_name: e-ui
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./ui:/app
+      - /app/node_modules
+    environment:
+      - VITE_DEV_SERVER=true
+    networks:
+      - event_app_network
+
+  db:
+    image: postgres:latest
+    container_name: e-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: event_app
+    ports:
+      - "5435:5432"
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - event_app_network
+
+volumes:
+  database:
+
+
+networks:
+  event_app_network:
+    driver: bridge
