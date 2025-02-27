@@ -16,6 +16,7 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IEventService, EventService>();
     }
 }
 

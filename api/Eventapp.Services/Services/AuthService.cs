@@ -43,9 +43,10 @@ namespace Eventapp.Services
             return null;
         }
 
-        public async Task<(User?, string[])> SignUp(string username, string password)
+        public async Task<(User?, string[])> SignUp(string username)
         {
             var newUser = new User { UserName = username, Email = username };
+            string password = "Event@2025";
 
             var result = await _userManager.CreateAsync(newUser, password);
             return result.Succeeded ? (newUser, [string.Empty]) : (null, result.Errors.Select(e => e.Description).ToArray());

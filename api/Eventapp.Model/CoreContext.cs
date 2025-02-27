@@ -10,5 +10,6 @@ public class CoreContext : IdentityDbContext<User, IdentityRole<int>, int>
     public CoreContext(DbContextOptions<CoreContext> options) : base(options) { }
 
     public DbSet<User> Users { get; set; }
-    // public DbSet<Home> Homes { get; set; }
+    public DbSet<Event> Events { get; set; }
+    public DbSet<Guest> Guests { get; set; }
 }

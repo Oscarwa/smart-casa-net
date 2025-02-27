@@ -27,10 +27,15 @@ namespace Eventapp.API.Controllers
             return new JsonResult(user);
         }
 
+        public class RegisterRequest
+        {
+            public required string Email { get; set; }
+        }
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] RegisterRequest request)
         {
-            var (user, message) = await _authService.SignUp(request.Email, request.Password);
+            Console.WriteLine("Request: " + request.Email);
+            var (user, message) = await _authService.SignUp(request.Email);
             return user != null ? Ok(user.Id) : BadRequest(message);
         }
 

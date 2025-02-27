@@ -1,25 +1,49 @@
-import { useState } from "react";
-import "./App.css";
+import { AppContext } from "./AppContext";
+import { BrowserRouter, Routes, Route } from "react-router";
 
-function App() {
-  const [count, setCount] = useState(0);
+import { SignIn } from "./pages/auth/SignIn";
+import { AuthLayout } from "./pages/auth/AuthLayout";
+import { SignUp } from "./pages/auth/SignUp";
+import { useState } from "react";
+import { ProtectedLayout } from "./pages/ProtectedLayout";
+
+type AppUser = {
+  email: string;
+};
+
+const App = () => {
+  const [user, setUser] = useState<AppUser | null>(null);
+
+  const clear = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
+  const context = {
+    token: localStorage.getItem("token") ?? "RIP token",
+    user,
+    setUser,
+    clear,
+  };
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn
-      </p>
-    </>
+    <AppContext.Provider value={context}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<ProtectedLayout />}>
+            <Route index element={<section>Home</section>} />
+            <Route path="event" element={<section>Event</section>} />
+            <Route path="guests" element={<section>Guests</section>} />
+            <Route path="budget" element={<section>Budget</section>} />
+          </Route>
+          <Route path="auth" element={<AuthLayout />}>
+            <Route path="signin" element={<SignIn />} />
+            <Route path="signup" element={<SignUp />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AppContext.Provider>
   );
-}
+};
 
 export default App;
