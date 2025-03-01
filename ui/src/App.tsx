@@ -8,6 +8,7 @@ import { useState } from "react";
 import { ProtectedLayout } from "./pages/ProtectedLayout";
 import { MyAccount } from "./pages/account/MyAccount";
 import { Settings } from "./pages/account/Settings";
+import { PasswordReset } from "./pages/auth/PasswordReset";
 
 type AppUser = {
   email: string;
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="auth" element={<AuthLayout />}>
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUp />} />
+            <Route path="password-reset" element={<PasswordReset />} />
           </Route>
           <Route path="account" element={<ProtectedLayout />}>
             <Route index element={<MyAccount />} />
