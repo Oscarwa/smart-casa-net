@@ -6,6 +6,8 @@ import { AuthLayout } from "./pages/auth/AuthLayout";
 import { SignUp } from "./pages/auth/SignUp";
 import { useState } from "react";
 import { ProtectedLayout } from "./pages/ProtectedLayout";
+import { MyAccount } from "./pages/account/MyAccount";
+import { Settings } from "./pages/account/Settings";
 
 type AppUser = {
   email: string;
@@ -39,6 +41,10 @@ const App = () => {
           <Route path="auth" element={<AuthLayout />}>
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUp />} />
+          </Route>
+          <Route path="account" element={<ProtectedLayout />}>
+            <Route index element={<MyAccount />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </BrowserRouter>

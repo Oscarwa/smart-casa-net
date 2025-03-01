@@ -31,7 +31,9 @@ export const Navbar = () => {
 
   return (
     <nav className="w-full shadow-md p-4 flex justify-between items-center">
-      <div className="text-xl font-bold">Logo</div>
+      <div className="text-xl font-bold">
+        <Link to="/">Logo</Link>
+      </div>
       <div className="flex gap-4">
         <NavigationMenu>
           <NavigationMenuList>
@@ -105,8 +107,12 @@ export const Navbar = () => {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link to="/account">Profile</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link to="/account/settings">Settings</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
