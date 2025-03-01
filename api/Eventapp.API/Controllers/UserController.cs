@@ -39,6 +39,20 @@ namespace Eventapp.API.Controllers
             return user != null ? Ok(user.Id) : BadRequest(message);
         }
 
+
+        public class PasswordResetModel
+        {
+            public required string Email { get; set; }
+            public required string Token { get; set; }
+            public required string Password { get; set; }
+        }
+        [HttpPost("password-reset")]
+        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel model)
+        {
+            var passwordReset = await _authService.PasswordReset(model.Email, model.Token, model.Password);
+            return passwordReset ? Ok() : BadRequest();
+        }
+
         [HttpGet("all")]
         public IActionResult Get() => Ok(_authService.All().Select(u => u.Email).ToList());
     }

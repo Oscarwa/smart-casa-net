@@ -8,6 +8,8 @@ namespace Eventapp.Services.Interfaces
 
         Task<(User?, string[])> SignUp(string username);
 
+        Task<bool> PasswordReset(string username, string token, string password);
+
         Task<bool> IsEmailDuplicate(string email);
         IQueryable<User> All();
     }
