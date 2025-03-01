@@ -8,10 +8,10 @@ namespace Eventapp.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class AuthController : ControllerBase
     {
         IAuthService _authService;
-        public UserController(IAuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }

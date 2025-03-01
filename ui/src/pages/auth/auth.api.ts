@@ -18,13 +18,13 @@ type PasswordResetRequest = {
 export const useSignInMutation = (
   onSuccess: (data, variables, context) => void
 ) =>
-  usePost<SignInRequest, SignInResponse>("/api/user/login", {
+  usePost<SignInRequest, SignInResponse>("/api/auth/login", {
     onSuccess,
     invalidateKeys: ["me"],
   });
 
 export const useSignUpMutation = (onSuccess: VoidFunction) =>
-  usePost<SignInRequest, SignInResponse>("/api/user/signup", {
+  usePost<SignInRequest, SignInResponse>("/api/auth/signup", {
     onSuccess,
     invalidateKeys: ["me"],
   });
@@ -32,7 +32,7 @@ export const useSignUpMutation = (onSuccess: VoidFunction) =>
 export const usePasswordResetMutation = (
   onSuccess: (data, variables, context) => void
 ) =>
-  usePost<PasswordResetRequest, SignInResponse>("/api/user/password-reset", {
+  usePost<PasswordResetRequest, SignInResponse>("/api/auth/password-reset", {
     onSuccess,
     invalidatesKeys: ["me"],
   });
