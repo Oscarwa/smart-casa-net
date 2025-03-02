@@ -1,7 +1,7 @@
 import { usePost } from "@/hooks/useApi";
 
 type SignInRequest = {
-  username: string;
+  email: string;
   password: string;
 };
 
@@ -16,23 +16,23 @@ type PasswordResetRequest = {
 };
 
 export const useSignInMutation = (
-  onSuccess: (data, variables, context) => void
+  onSuccess: (data: any, variables: any, context: any) => void
 ) =>
-  usePost<SignInRequest, SignInResponse>("/api/auth/login", {
+  usePost<SignInRequest, SignInResponse>("/api/auth/signin", {
     onSuccess,
     invalidateKeys: ["me"],
   });
 
 export const useSignUpMutation = (onSuccess: VoidFunction) =>
-  usePost<SignInRequest, SignInResponse>("/api/auth/signup", {
+  usePost<Omit<SignInRequest, "password">, SignInResponse>("/api/auth/signup", {
     onSuccess,
     invalidateKeys: ["me"],
   });
 
 export const usePasswordResetMutation = (
-  onSuccess: (data, variables, context) => void
+  onSuccess: (data: any, variables: any, context: any) => void
 ) =>
   usePost<PasswordResetRequest, SignInResponse>("/api/auth/password-reset", {
     onSuccess,
-    invalidatesKeys: ["me"],
+    invalidateKeys: ["me"],
   });

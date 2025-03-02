@@ -22,7 +22,7 @@ export const SignUpForm = ({
   );
   const [email, setEmail] = useState("oscar2@mail.com");
 
-  const handleSignIn = (e) => {
+  const handleSignIn = (e: any) => {
     e.preventDefault();
     signUpMutation({ email });
   };
@@ -49,7 +49,7 @@ export const SignUpForm = ({
                   placeholder="john@example.com"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: any) => setEmail(e.target.value)}
                 />
               </div>
               <Button className="w-full">Join</Button>

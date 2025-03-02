@@ -12,8 +12,16 @@ async function fetchData<TResponse>(
   url: string,
   options?: RequestInit
 ): Promise<TResponse> {
+  const token = localStorage.getItem("token");
+  const authHeader: HeadersInit = token
+    ? { Authorization: `Bearer ${token}` }
+    : {};
   const response = await fetch(apiBaseUrl + url, {
-    headers: { "Content-Type": "application/json", ...options?.headers },
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+      ...authHeader,
+    },
     ...options,
   });
 

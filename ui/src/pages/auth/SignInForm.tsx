@@ -18,17 +18,15 @@ export const SignInForm = ({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) => {
   const navigate = useNavigate();
-  const { mutate: signInMutation } = useSignInMutation(
-    (data, variables, context) => {
-      console.log(data);
-      localStorage.setItem("token", data.email);
-      navigate("/");
-    }
-  );
+  const { mutate: signInMutation } = useSignInMutation((token) => {
+    console.log("setting token:", token);
+    localStorage.setItem("token", token);
+    navigate("/");
+  });
   const [email, setEmail] = useState("oscar2@mail.com");
   const [password, setPassword] = useState("Zant#181088wa");
 
-  const handleSignIn = (e) => {
+  const handleSignIn = (e: any) => {
     e.preventDefault();
     signInMutation({ email, password });
   };
@@ -53,7 +51,7 @@ export const SignInForm = ({
                   placeholder="john@example.com"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: any) => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
@@ -71,7 +69,7 @@ export const SignInForm = ({
                   type="password"
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: any) => setPassword(e.target.value)}
                 />
               </div>
               <Button className="w-full">Login</Button>

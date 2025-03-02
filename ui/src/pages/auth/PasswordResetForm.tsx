@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,22 +18,21 @@ export const PasswordResetForm = ({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) => {
   const navigate = useNavigate();
-  const { mutate: passwordResetMutation } = usePasswordResetMutation((data) => {
-    //localStorage.setItem("token", data.email);
+  const { mutate: passwordResetMutation } = usePasswordResetMutation(() => {
     navigate("/");
   });
   const [password, setPassword] = useState("Zant#181088wa");
   const [params] = useSearchParams();
-  const token = params.get("token");
+  const token: string = params.get("token") ?? "";
   if (!token) {
     console.error("No token provided for password reset");
   }
-  const email = params.get("email");
+  const email: string = params.get("email") ?? "";
   if (!email) {
     console.error("No email provided for password reset");
   }
 
-  const handlePasswordReset = (e) => {
+  const handlePasswordReset = (e: any) => {
     e.preventDefault();
     passwordResetMutation({ email, token, password });
   };

@@ -31,18 +31,11 @@ namespace Eventapp.Services
 
         public async Task<User?> SignIn(string username, string password)
         {
-            var signInResult = await _signInManager.PasswordSignInAsync(username, password, false, false);
-            if (signInResult.Succeeded)
-            {
-                var appUser = await _userManager.FindByEmailAsync(username);
-                if (appUser != null)
-                {
-                    var customClaims = new List<KeyValuePair<string, string>>();
-                    customClaims.Add(new KeyValuePair<string, string>("user", JsonSerializer.Serialize(appUser)));
-                }
-                return appUser;
-            }
-            return null;
+            var user = await _userManager.FindByNameAsync(username);
+            if (user is null) return null;
+
+            if (!await _userManager.CheckPasswordAsync(user, password)) return null;
+            return user;
         }
 
         public async Task<bool> PasswordReset(string username, string token, string password)
@@ -63,8 +56,6 @@ namespace Eventapp.Services
         public async Task<(User?, string[])> SignUp(string username)
         {
             var newUser = new User { UserName = username, Email = username, EmailConfirmed = true };
-            string password = "Event@2025";
-
             var result = await _userManager.CreateAsync(newUser);
 
             if (!result.Succeeded)

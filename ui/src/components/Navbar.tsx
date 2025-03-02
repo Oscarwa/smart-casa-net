@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { useNavigate, Link } from "react-router";
 import { AppContext } from "@/AppContext";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,14 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
-import { cn } from "@/lib/utils";
 
 export const Navbar = () => {
   const { clear } = useContext(AppContext);

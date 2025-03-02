@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Eventapp.Services;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Eventapp.Services.Interfaces;
+using Eventapp.Model.Entities;
 
 namespace Eventapp.API.Controllers
 {
@@ -10,21 +13,25 @@ namespace Eventapp.API.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly IAuthService _authService;
+        private readonly IConfiguration _config;
+        public AuthController(IConfiguration config, IAuthService authService)
         {
             _authService = authService;
+            _config = config;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        [HttpPost("signin")]
+        public async Task<IActionResult> SignIn([FromBody] LoginRequest request)
         {
             var user = await _authService.SignIn(request.Email, request.Password);
             if (user == null)
             {
                 return BadRequest();
             }
-            return new JsonResult(user);
+            var token = GenerateToken(user);
+            // Console.WriteLine($"Generated token for user [{request.Email}]: {token}");
+            return new JsonResult(token);
         }
 
         public class RegisterRequest
@@ -55,5 +62,35 @@ namespace Eventapp.API.Controllers
 
         [HttpGet("all")]
         public IActionResult Get() => Ok(_authService.All().Select(u => u.Email).ToList());
+
+
+        private string GenerateToken(User user)
+        {
+            var jwtSettings = _config.GetSection("JwtSettings");
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]));
+
+            var creds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+        };
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"])),
+                SigningCredentials = creds,
+                Issuer = jwtSettings["Issuer"],
+                Audience = jwtSettings["Audience"]
+            };
+
+            var tokenHandler = new JsonWebTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return token;
+        }
     }
 }

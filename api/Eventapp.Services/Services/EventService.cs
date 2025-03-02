@@ -18,6 +18,11 @@ public class EventService : IEventService
         return _context.Events.AsQueryable();
     }
 
+    public async Task<IQueryable<Event>> MyEvents(User user)
+    {
+        return All().Where(e => e.Organizers.Contains(user)).AsQueryable();
+    }
+
     public async Task<Event?> Get(int id)
     {
         return await _context.Events.FindAsync(id);

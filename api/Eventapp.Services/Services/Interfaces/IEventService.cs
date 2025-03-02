@@ -13,6 +13,8 @@ namespace Eventapp.Services.Interfaces
         Task<Event?> Get(int id);
 
         IQueryable<Event> All();
+
+        Task<IQueryable<Event>> MyEvents(User user);
     }
 
 }
