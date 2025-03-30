@@ -8,7 +8,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 
 # Copy everything and restore dependencies
 COPY . ./
-WORKDIR /app/Eventapp.API
+WORKDIR /app/SmartCasa.API
 RUN dotnet restore
 
 # Expose ports for the API and debugging
