@@ -1,12 +1,30 @@
 import {
   useQuery,
   UseQueryOptions,
+  UseQueryResult,
   useMutation,
   UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query";
 
 const apiBaseUrl = "http://localhost:8080";
+
+function parseDateOnly<T>(obj: T): T {
+  if (typeof obj === "string" && /^\d{4}-\d{2}-\d{2}$/.test(obj)) {
+    return new Date(obj + "T00:00:00") as unknown as T;
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(parseDateOnly) as unknown as T;
+  }
+  if (typeof obj === "object" && obj !== null) {
+    const parsedObj: any = { ...obj };
+    for (const key in parsedObj) {
+      parsedObj[key] = parseDateOnly(parsedObj[key]);
+    }
+    return parsedObj as T;
+  }
+  return obj;
+}
 
 async function fetchData<TResponse>(
   url: string,
@@ -26,17 +44,21 @@ async function fetchData<TResponse>(
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
   }
 
-  return response.json() as Promise<TResponse>;
+  const data = await response.json();
+  return parseDateOnly(data) as TResponse;
 }
 
 export function useGet<TResponse>(
   key: string, // Unique key for caching
   url: string,
   options?: UseQueryOptions<TResponse>
-) {
+): UseQueryResult<TResponse> {
   return useQuery<TResponse>({
     queryKey: [key],
     queryFn: () => fetchData<TResponse>(url),

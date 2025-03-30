@@ -15,15 +15,23 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
+import { useTranslation } from "react-i18next";
 
 export const Navbar = () => {
-  const { clear } = useContext(AppContext);
+  const { t } = useTranslation();
+  const { clear, currentEvent, setCurrentEvent, events } =
+    useContext(AppContext);
   const navigate = useNavigate();
 
   const logout = () => {
     clear();
     navigate("/auth/signin");
   };
+
+  const hasEvents = events.length > 0;
+  if (hasEvents && events.length === 1 && currentEvent === null) {
+    setCurrentEvent(events[0]);
+  }
 
   return (
     <nav className="w-full shadow-md p-4 flex justify-between items-center">
@@ -72,27 +80,45 @@ export const Navbar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem> */}
-            <NavigationMenuItem>
-              <Link to="/event">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Event
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link to="/guests">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Guests
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link to="/budget">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Budget
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
+            {!hasEvents ? (
+              <NavigationMenuItem>
+                <Link to="/events/create">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    {t("firstEvent")}
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            ) : (
+              <>
+                <strong className="mr-8">
+                  <Link to="/events">
+                    {t("event")}: <u>{currentEvent?.name}</u>
+                  </Link>
+                </strong>
+                {currentEvent && (
+                  <NavigationMenuItem>
+                    <Link to={`/events/${currentEvent.id}/guests`}>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        {t("guests")}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                )}
+                {currentEvent && (
+                  <NavigationMenuItem>
+                    <Link to={`/events/${currentEvent.id}/budgets`}>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        {t("budgets")}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                )}
+              </>
+            )}
           </NavigationMenuList>
         </NavigationMenu>
       </div>
@@ -104,12 +130,12 @@ export const Navbar = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem>
-            <Link to="/account">Profile</Link>
+            <Link to="/account">{t("profile")}</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to="/account/settings">Settings</Link>
+            <Link to="/account/settings">{t("settings")}</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={logout}>{t("logout")}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </nav>

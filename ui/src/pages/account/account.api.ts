@@ -1,3 +1,9 @@
 import { useGet } from "@/hooks/useApi";
 
-export const useGetMeQuery = () => useGet("me", "/api/users/me");
+type MeResponse = {
+  id: number;
+  email: string;
+  username: string;
+};
+
+export const useGetMeQuery = () => useGet<MeResponse>("me", "/api/users/me");

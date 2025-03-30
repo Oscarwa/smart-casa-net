@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ export const SignInForm = ({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate: signInMutation } = useSignInMutation((token) => {
     console.log("setting token:", token);
@@ -35,16 +37,14 @@ export const SignInForm = ({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
+          <CardTitle className="text-2xl">{t("login")}</CardTitle>
+          <CardDescription>{t("loginDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignIn}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("email")}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -56,12 +56,12 @@ export const SignInForm = ({
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{t("password")}</Label>
                   <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
-                    Forgot your password?
+                    {t("forgotPassword")}
                   </a>
                 </div>
                 <Input
@@ -72,15 +72,15 @@ export const SignInForm = ({
                   onChange={(e: any) => setPassword(e.target.value)}
                 />
               </div>
-              <Button className="w-full">Login</Button>
+              <Button className="w-full">{t("login")}</Button>
               {/* <Button variant="outline" className="w-full">
                 Login with Google
               </Button> */}
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
+              {t("noAccount")}{" "}
               <Link to="/auth/signup" className="underline underline-offset-4">
-                Sign up
+                {t("register")}
               </Link>
             </div>
           </form>
